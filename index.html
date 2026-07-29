@@ -5,241 +5,726 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitácora Luis Castillo</title>
     <link rel="icon" href="Recursos/img/logocapullitoazul.png" type="image/png">
-    
+
+    <!-- Tipografía más bonita: Poppins (Google Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
+        /* ====== PALETA (todo en familia azul) ====== */
+        :root {
+            --navy:      #121260;
+            --navy-2:    #1b1e8a;
+            --blue:      #345EF4;
+            --blue-2:    #3A88E8;
+            --soft:      #89A2FE;
+            --ink:       #1c2140;
+            --muted:     #737aa0;
+            --line:      #e6ebf7;
+            --card:      #ffffff;
+            --shadow:    0 10px 30px rgba(18, 18, 96, .10);
+            --shadow-lg: 0 20px 45px rgba(18, 18, 96, .18);
+        }
+
+        * { box-sizing: border-box; }
+
         html, body {
             height: 100%;
             margin: 0;
-            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
-            background-color: #f4f7f9; /* Un color de fondo suave para que las tarjetas resalten */
+            font-family: 'Poppins', 'Segoe UI', Arial, Helvetica, sans-serif;
+            color: var(--ink);
+            /* Fondo suave con un toque de degradado azul */
+            background:
+                radial-gradient(1200px 500px at 80% -10%, #dfe7ff 0%, transparent 60%),
+                radial-gradient(900px 500px at -10% 10%, #e8f1ff 0%, transparent 55%),
+                #f4f7fb;
         }
 
         body {
             display: flex;
             flex-direction: column;
             text-align: center;
+            min-height: 100%;
         }
 
+        /* ====== HEADER ====== */
         header {
-            padding: 25px;
-            background-color: rgb(18, 18, 96);
+            position: relative;
+            overflow: hidden;
+            padding: 55px 25px 60px;
+            background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 60%, #2b34c9 100%);
             color: white;
         }
+        /* Burbujas decorativas y suaves */
+        header::before, header::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(2px);
+            opacity: .35;
+        }
+        header::before {
+            width: 260px; height: 260px;
+            background: radial-gradient(circle, var(--blue) 0%, transparent 70%);
+            top: -90px; right: -60px;
+            animation: float 9s ease-in-out infinite;
+        }
+        header::after {
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, var(--soft) 0%, transparent 70%);
+            bottom: -80px; left: -40px;
+            animation: float 11s ease-in-out infinite reverse;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(22px); }
+        }
 
-        /* INSTRUCCIÓN 1: El Neón (Ahora aplicado al header h1) */
+        header .eyebrow {
+            position: relative;
+            display: inline-block;
+            font-size: .78rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--soft);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        /* Se mantiene tu efecto NEÓN en el título */
         header h1 {
+            position: relative;
             text-transform: uppercase;
             letter-spacing: 2px;
             margin: 0;
-            text-shadow: 
+            font-weight: 800;
+            font-size: clamp(1.6rem, 4.5vw, 2.7rem);
+            text-shadow:
                 0 0 5px white,
                 0 0 10px rgb(184, 198, 249),
                 0 0 20px rgb(137, 162, 254),
                 0 0 40px rgb(52, 94, 244);
         }
+        header .sub {
+            position: relative;
+            margin-top: 14px;
+            color: #cfd8ff;
+            font-weight: 300;
+            font-size: .95rem;
+        }
 
+        /* ====== MAIN ====== */
         main {
             flex: 1;
-            padding: 30px;
+            width: 100%;
+            padding: 34px 24px 50px;
             max-width: 1000px;
-            margin: 0 auto;
+            margin: -30px auto 0;   /* sube un poco para "montarse" sobre el header */
         }
 
-        /* EL RETO: Clase .semana */
-        .semana {
-            background-color: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+        /* ====== BARRA DE HERRAMIENTAS (buscador + filtros) ====== */
+        .toolbar {
+            background: var(--card);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+            padding: 18px;
+            margin-bottom: 26px;
             text-align: left;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Sombra elegante */
-            border-left: 6px solid rgb(18, 18, 96); /* Detalle visual */
-            transition: transform 0.3s ease;
         }
 
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-box svg {
+            position: absolute;
+            left: 16px;
+            width: 20px; height: 20px;
+            color: var(--muted);
+            pointer-events: none;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 14px 16px 14px 46px;
+            border: 2px solid var(--line);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--ink);
+            background: #f8faff;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s, background .2s;
+        }
+        .search-box input::placeholder { color: #9aa2c4; }
+        .search-box input:focus {
+            border-color: var(--blue);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(52, 94, 244, .15);
+        }
+
+        .filters-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border: 2px solid var(--line);
+            background: #fff;
+            color: var(--muted);
+            padding: 8px 15px;
+            border-radius: 999px;
+            font-family: inherit;
+            font-size: .85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .2s ease;
+        }
+        .chip svg { width: 15px; height: 15px; }
+        .chip:hover { border-color: var(--soft); color: var(--blue); transform: translateY(-1px); }
+        .chip.active {
+            background: var(--blue);
+            border-color: var(--blue);
+            color: #fff;
+            box-shadow: 0 6px 16px rgba(52, 94, 244, .35);
+        }
+
+        .toolbar-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        #contador { font-size: .82rem; color: var(--muted); font-weight: 500; }
+        #expandir {
+            border: none;
+            background: transparent;
+            color: var(--blue);
+            font-family: inherit;
+            font-weight: 600;
+            font-size: .82rem;
+            cursor: pointer;
+            padding: 6px 4px;
+            transition: opacity .2s;
+        }
+        #expandir:hover { opacity: .7; text-decoration: underline; }
+
+        /* ====== TARJETAS (.semana) ====== */
+        .semana {
+            background: var(--card);
+            border-radius: 16px;
+            margin-bottom: 18px;
+            text-align: left;
+            box-shadow: var(--shadow);
+            border-left: 6px solid var(--navy);
+            overflow: hidden;
+            transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+            /* animación de entrada escalonada */
+            opacity: 0;
+            animation: reveal .55s ease forwards;
+            animation-delay: var(--delay, 0s);
+        }
+        @keyframes reveal {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: none; }
+        }
+        /* el "salto" al pasar el cursor */
         .semana:hover {
-            transform: translateY(-5px); /* Efecto de levitación */
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
+            border-left-color: var(--blue);
+        }
+        /* color del borde según el tipo */
+        .semana[data-type="video"]     { border-left-color: var(--blue); }
+        .semana[data-type="documento"] { border-left-color: var(--navy); }
+        .semana[data-type="imagen"]    { border-left-color: var(--blue-2); }
+
+        /* Cabecera clicable de cada tarjeta */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            padding: 18px 22px;
+            background: none;
+            border: none;
+            font-family: inherit;
+            text-align: left;
+            cursor: pointer;
+            transition: background .2s;
+        }
+        .card-header:hover { background: #f6f9ff; }
+
+        /* Insignia con el icono del tipo */
+        .type-badge {
+            flex-shrink: 0;
+            width: 46px; height: 46px;
+            border-radius: 13px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            box-shadow: 0 6px 14px rgba(52, 94, 244, .30);
+        }
+        .type-badge svg { width: 24px; height: 24px; }
+        .semana[data-type="video"]     .type-badge { background: linear-gradient(135deg, var(--blue), #5b7bff); }
+        .semana[data-type="documento"] .type-badge { background: linear-gradient(135deg, var(--navy), #3a3fb0); }
+        .semana[data-type="imagen"]    .type-badge { background: linear-gradient(135deg, var(--blue-2), #63a4f0); }
+
+        .title-wrap { flex: 1; min-width: 0; }
+        .title-wrap h3 {
+            margin: 0;
+            font-size: 1.08rem;
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.3;
+        }
+        .type-label {
+            display: inline-block;
+            margin-top: 5px;
+            font-size: .72rem;
+            font-weight: 600;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            padding: 2px 9px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: var(--blue);
+        }
+        .semana[data-type="documento"] .type-label { background: #e9eaff; color: var(--navy-2); }
+        .semana[data-type="imagen"]    .type-label { background: #e7f2ff; color: var(--blue-2); }
+
+        /* La flechita que rota */
+        .chevron {
+            flex-shrink: 0;
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: var(--blue);
+            background: #eef2ff;
+            transition: transform .35s ease, background .2s;
+        }
+        .chevron svg { width: 20px; height: 20px; }
+        .card-header:hover .chevron { background: #dfe6ff; }
+        .semana.open .chevron { transform: rotate(180deg); }
+
+        /* Contenido colapsable (truco de grid para animar altura variable) */
+        .card-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows .45s cubic-bezier(.4, 0, .2, 1);
+        }
+        .semana.open .card-content { grid-template-rows: 1fr; }
+        .card-content-inner {
+            overflow: hidden;
+            padding: 0 22px;
+        }
+        /* padding inferior real solo cuando está abierto (se ve más limpio) */
+        .semana.open .card-content-inner { padding-bottom: 22px; }
+
+        .card-content-inner .desc {
+            margin: 0 0 4px;
+            color: var(--muted);
+            line-height: 1.55;
         }
 
-        /* INSTRUCCIÓN 2: Zoom en el logo del footer */
-        footer img {
-            transition: transform 0.3s ease;
+        .media { margin-top: 16px; }
+        .media video, .media embed {
+            width: 100%;
+            border: 2px solid var(--navy);
+            border-radius: 12px;
+        }
+        .media video { max-height: 500px; background: #000; display: block; }
+        .media embed { height: 500px; }
+
+        .credit {
+            font-size: .78em;
+            color: #9aa2c4;
+            text-align: right;
+            margin: 14px 0 0;
         }
 
-        footer img:hover {
-            transform: scale(1.1); /* Crece un 10% */
+        /* Mensaje cuando el buscador no encuentra nada */
+        #sin-resultados {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 50px 20px;
+            color: var(--muted);
         }
+        #sin-resultados svg { width: 46px; height: 46px; color: var(--soft); }
 
+        /* ====== FOOTER ====== */
         footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 50px;
-            background-color: rgb(58, 136, 232);
+            padding: 20px 50px;
+            background: linear-gradient(135deg, var(--blue-2), var(--blue));
             color: white;
+            font-weight: 500;
+        }
+        footer img { transition: transform .3s ease; }
+        footer img:hover { transform: scale(1.1) rotate(-3deg); }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 640px) {
+            .toolbar-right { margin-left: 0; width: 100%; justify-content: space-between; }
+            .filters-row { flex-direction: column; align-items: stretch; }
+            footer { flex-direction: column; gap: 15px; padding: 20px; }
+            .type-label { display: none; }
         }
 
-        @media(max-width: 600px){
-            footer {
-                flex-direction: column;
-                gap: 15px;
-            }
+        /* Respeta a quien prefiere menos movimiento */
+        @media (prefers-reduced-motion: reduce) {
+            * { animation: none !important; transition: none !important; }
         }
     </style>
 </head>
 <body>
 
     <header>
+        <span class="eyebrow">Robótica · Arduino &amp; Tinkercad</span>
         <h1>Bitácora Segunda y Tercera Unidad</h1>
+        <p class="sub">Registro de circuitos, prácticas y proyectos del curso</p>
     </header>
 
     <main>
-        <h4 style="color: #333;">Contenido de la Bitácora</h4>
 
-        <!-- Aquí usas la clase .semana para tus entradas -->
-        <div class="semana">
-            <h3>Semana de Introducción a Arduino</h3>
-            <p>Arduino es una plataforma de creación electrónica de código abierto basada en hardware y software libre[cite: 1].</p>
-    
-    <!-- VISTA PREVIA DEL PDF -->
-    <div style="margin-top: 20px;">
-        <embed 
-            src="Recursos/Introducción Arduino - Luis Enrique Castillo Dardón 11D (1).pdf"
-            type="application/pdf" 
-            width="100%" 
-            height="500px" 
-            style="border: 2px solid rgb(18, 18, 96); border-radius: 10px;"
-        />
-    </div>
+        <!-- ====== BUSCADOR + FILTROS ====== -->
+        <div class="toolbar">
+            <div class="search-box">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input id="buscador" type="text" placeholder="Buscar por título o descripción…" autocomplete="off">
+            </div>
 
-    <p style="font-size: 0.8em; color: #888; text-align: right; margin-top: 15px;">
-        Documento por: Luis Enrique Castillo Dardón[cite: 1]
-    </p>
-</div>
+            <div class="filters-row">
+                <button class="chip active" data-filter="todos">Todos</button>
+                <button class="chip" data-filter="video">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2"/></svg>
+                    Videos
+                </button>
+                <button class="chip" data-filter="documento">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+                    Documentos
+                </button>
+                <button class="chip" data-filter="imagen">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>
+                    Imágenes
+                </button>
 
-        <div class="semana">
-            <h3>Primer circuito Tinkercad</h3>
-              <p>En este día usamos Tinkercad y aprendimos sus bases con circuitos por primera vez.</p>
-            
-            <div style="margin-top: 20px;">
-                <video 
-                    src="Recursos/video_circuito_tinkercard.mp4" 
-                    controls 
-                    width="100%" 
-                    style="border: 2px solid rgb(18, 18, 96); border-radius: 10px; max-height: 500px; background-color: black;">
-                    Tu navegador no soporta la reproducción de este video.
-                </video>
+                <div class="toolbar-right">
+                    <span id="contador"></span>
+                    <button id="expandir">Expandir todo</button>
+                </div>
             </div>
         </div>
-        
-    <div class="semana">
-            <h3>Semana 3: Práctica de Robótica en Video</h3>
-            <p>En esta sesión grabamos el funcionamiento del circuito programado en Arduino.</p>
-            
-            <div style="margin-top: 20px;">
-                <video 
-                    src="Recursos/videoleds_arduino_fisico.mp4" 
-                    controls 
-                    width="100%" 
-                    style="border: 2px solid rgb(18, 18, 96); border-radius: 10px; max-height: 500px; background-color: black;">
-                    Tu navegador no soporta la reproducción de este video.
-                </video>
-            </div>
-      </div> 
-        
-            <div class="semana">
-            <h3>Semana 3: Semáforo con RGB Tinkercad</h3>
-            <p>Hicimos una especie de semáforo con 3 LEDs y una RGB</p>
-            
-            <div style="margin-top: 20px;">
-                <video 
-                    src="Recursos/circuitotinkercadsemaforo.mp4" 
-                    controls 
-                    width="100%" 
-                    style="border: 2px solid rgb(18, 18, 96); border-radius: 10px; max-height: 500px; background-color: black;">
-                    Tu navegador no soporta la reproducción de este video.
-                </video>
-            </div>
-      </div> 
-        
-        <div class="semana">
-            <h3>Circuito 4: Semáforo</h3>
-            <p>En esta sesión grabamos el funcionamiento del circuito programado en Arduino.</p>
-            
-            <div style="margin-top: 20px;">
-                <video 
-                    src="Recursos/semaforoquique.mp4" 
-                    controls 
-                    width="100%" 
-                    style="border: 2px solid rgb(18, 18, 96); border-radius: 10px; max-height: 500px; background-color: black;">
-                    Tu navegador no soporta la reproducción de este video.
-                </video>
-            </div>
-            <p style="font-size: 0.8em; color: #888; text-align: right; margin-top: 15px;">
-                Video por: Luis Enrique Castillo Dardón
-            </p>
+
+        <!-- ====== ENTRADAS ======
+             Cada tarjeta usa data-type="video | documento | imagen"
+             para elegir su icono, color y comportamiento del buscador. -->
+
+        <!-- 1) DOCUMENTO (PDF) -->
+        <article class="semana" data-type="documento">
+            <button class="card-header" aria-expanded="false">
+                <span class="type-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>
+                </span>
+                <div class="title-wrap">
+                    <h3>Semana de Introducción a Arduino</h3>
+                    <span class="type-label">Documento</span>
+                </div>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+            </button>
+            <div class="card-content"><div class="card-content-inner">
+                <p class="desc">Arduino es una plataforma de creación electrónica de código abierto basada en hardware y software libre.</p>
+                <div class="media">
+                    <embed src="Recursos/Introducción Arduino - Luis Enrique Castillo Dardón 11D (1).pdf" type="application/pdf" />
+                </div>
+                <p class="credit">Documento por: Luis Enrique Castillo Dardón</p>
+            </div></div>
+        </article>
+
+        <!-- 2) VIDEO -->
+        <article class="semana" data-type="video">
+            <button class="card-header" aria-expanded="false">
+                <span class="type-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2"/></svg>
+                </span>
+                <div class="title-wrap">
+                    <h3>Primer circuito Tinkercad</h3>
+                    <span class="type-label">Video</span>
+                </div>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+            </button>
+            <div class="card-content"><div class="card-content-inner">
+                <p class="desc">En este día usamos Tinkercad y aprendimos sus bases con circuitos por primera vez.</p>
+                <div class="media">
+                    <video src="Recursos/video_circuito_tinkercard.mp4" controls>
+                        Tu navegador no soporta la reproducción de este video.
+                    </video>
+                </div>
+            </div></div>
+        </article>
+
+        <!-- 3) VIDEO -->
+        <article class="semana" data-type="video">
+            <button class="card-header" aria-expanded="false">
+                <span class="type-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2"/></svg>
+                </span>
+                <div class="title-wrap">
+                    <h3>Semana 3: Práctica de Robótica en Video</h3>
+                    <span class="type-label">Video</span>
+                </div>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+            </button>
+            <div class="card-content"><div class="card-content-inner">
+                <p class="desc">En esta sesión grabamos el funcionamiento del circuito programado en Arduino.</p>
+                <div class="media">
+                    <video src="Recursos/videoleds_arduino_fisico.mp4" controls>
+                        Tu navegador no soporta la reproducción de este video.
+                    </video>
+                </div>
+            </div></div>
+        </article>
+
+        <!-- 4) VIDEO -->
+        <article class="semana" data-type="video">
+            <button class="card-header" aria-expanded="false">
+                <span class="type-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2"/></svg>
+                </span>
+                <div class="title-wrap">
+                    <h3>Semana 3: Semáforo con RGB Tinkercad</h3>
+                    <span class="type-label">Video</span>
+                </div>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+            </button>
+            <div class="card-content"><div class="card-content-inner">
+                <p class="desc">Hicimos una especie de semáforo con 3 LEDs y una RGB.</p>
+                <div class="media">
+                    <video src="Recursos/circuitotinkercadsemaforo.mp4" controls>
+                        Tu navegador no soporta la reproducción de este video.
+                    </video>
+                </div>
+            </div></div>
+        </article>
+
+        <!-- 5) VIDEO -->
+        <article class="semana" data-type="video">
+            <button class="card-header" aria-expanded="false">
+                <span class="type-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2"/></svg>
+                </span>
+                <div class="title-wrap">
+                    <h3>Circuito 4: Semáforo</h3>
+                    <span class="type-label">Video</span>
+                </div>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+            </button>
+            <div class="card-content"><div class="card-content-inner">
+                <p class="desc">En esta sesión grabamos el funcionamiento del circuito programado en Arduino.</p>
+                <div class="media">
+                    <video src="Recursos/semaforoquique.mp4" controls>
+                        Tu navegador no soporta la reproducción de este video.
+                    </video>
+                </div>
+                <p class="credit">Video por: Luis Enrique Castillo Dardón</p>
+            </div></div>
+        </article>
+
+        <!-- 6) VIDEO -->
+        <article class="semana" data-type="video">
+            <button class="card-header" aria-expanded="false">
+                <span class="type-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2"/></svg>
+                </span>
+                <div class="title-wrap">
+                    <h3>Sensor Ultrasónico en Tinkercad</h3>
+                    <span class="type-label">Video</span>
+                </div>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+            </button>
+            <div class="card-content"><div class="card-content-inner">
+                <p class="desc">Programamos un sensor de distancia ultrasónico en Tinkercad con el arduino.</p>
+                <div class="media">
+                    <video src="Recursos/sensorUltrasonicoTinkercad.mp4" controls>
+                        Tu navegador no soporta la reproducción de este video.
+                    </video>
+                </div>
+                <p class="credit">Video por: Luis Enrique Castillo Dardón</p>
+            </div></div>
+        </article>
+
+        <!-- 7) VIDEO -->
+        <article class="semana" data-type="video">
+            <button class="card-header" aria-expanded="false">
+                <span class="type-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2"/></svg>
+                </span>
+                <div class="title-wrap">
+                    <h3>Sensor de movimiento (PIR) en Tinkercad</h3>
+                    <span class="type-label">Video</span>
+                </div>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+            </button>
+            <div class="card-content"><div class="card-content-inner">
+                <p class="desc">Programamos un sensor de movimiento (PIR) en Tinkercad con el arduino.</p>
+                <div class="media">
+                    <video src="Recursos/sensorPIR.mp4" controls>
+                        Tu navegador no soporta la reproducción de este video.
+                    </video>
+                </div>
+                <p class="credit">Video por: Luis Enrique Castillo Dardón</p>
+            </div></div>
+        </article>
+
+        <!-- 8) VIDEO -->
+        <article class="semana" data-type="video">
+            <button class="card-header" aria-expanded="false">
+                <span class="type-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"/><rect width="14" height="12" x="2" y="6" rx="2"/></svg>
+                </span>
+                <div class="title-wrap">
+                    <h3>Circuito de la suficiencia</h3>
+                    <span class="type-label">Video</span>
+                </div>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+            </button>
+            <div class="card-content"><div class="card-content-inner">
+                <p class="desc">Este es el circuito del reto asignado en el examen de la suficiencia y su funcionamiento.</p>
+                <div class="media">
+                    <video src="Recursos/circuitoSuficiencia.mp4" controls>
+                        Tu navegador no soporta la reproducción de este video.
+                    </video>
+                </div>
+                <p class="credit">Video por: Luis Enrique Castillo Dardón</p>
+            </div></div>
+        </article>
+
+        <!-- ====== PLANTILLA PARA UNA IMAGEN ======
+             Copia este bloque y quita los comentarios cuando quieras
+             agregar una entrada de tipo imagen. El icono ya cambia solo.
+
+        <article class="semana" data-type="imagen">
+            <button class="card-header" aria-expanded="false">
+                <span class="type-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>
+                </span>
+                <div class="title-wrap">
+                    <h3>Título de tu imagen</h3>
+                    <span class="type-label">Imagen</span>
+                </div>
+                <span class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></span>
+            </button>
+            <div class="card-content"><div class="card-content-inner">
+                <p class="desc">Descripción de la imagen.</p>
+                <div class="media">
+                    <img src="Recursos/tu-imagen.png" alt="Descripción" style="width:100%;border:2px solid var(--navy);border-radius:12px;">
+                </div>
+            </div></div>
+        </article>
+        ====== FIN PLANTILLA ====== -->
+
+        <!-- Mensaje si el buscador no encuentra nada -->
+        <div id="sin-resultados">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <p>No se encontraron entradas con esa búsqueda.</p>
         </div>
 
-    <div class="semana">
-            <h3>Sensor Ultrasónico en Tinkercad</h3>
-            <p>Progamamos un sensor de distancia ultrasónico en Tinkercad con el arduino.</p>
-            
-            <div style="margin-top: 20px;">
-                <video 
-                    src="Recursos/sensorUltrasonicoTinkercad.mp4" 
-                    controls 
-                    width="100%" 
-                    style="border: 2px solid rgb(18, 18, 96); border-radius: 10px; max-height: 500px; background-color: black;">
-                    Tu navegador no soporta la reproducción de este video.
-                </video>
-            </div>
-            <p style="font-size: 0.8em; color: #888; text-align: right; margin-top: 15px;">
-                Video por: Luis Enrique Castillo Dardón
-            </p>
-        </div>
-
-        <div class="semana">
-            <h3>Sensor de movimiento (PIR) en Tinkercad</h3>
-            <p>Progamamos un sensor de movimiento (PIR) en Tinkercad con el arduino.</p>
-            
-            <div style="margin-top: 20px;">
-                <video 
-                    src="Recursos/sensorPIR.mp4" 
-                    controls 
-                    width="100%" 
-                    style="border: 2px solid rgb(18, 18, 96); border-radius: 10px; max-height: 500px; background-color: black;">
-                    Tu navegador no soporta la reproducción de este video.
-                </video>
-            </div>
-            <p style="font-size: 0.8em; color: #888; text-align: right; margin-top: 15px;">
-                Video por: Luis Enrique Castillo Dardón
-            </p>
-        </div>
-
-    <div class="semana">
-            <h3>Circuito de la suficiencia</h3>
-            <p>Este es el circuito del reto asignado en el examen de la suficiencia y su funcionamiento.</p>
-            
-            <div style="margin-top: 20px;">
-                <video 
-                    src="Recursos/circuitoSuficiencia.mp4" 
-                    controls 
-                    width="100%" 
-                    style="border: 2px solid rgb(18, 18, 96); border-radius: 10px; max-height: 500px; background-color: black;">
-                    Tu navegador no soporta la reproducción de este video.
-                </video>
-            </div>
-            <p style="font-size: 0.8em; color: #888; text-align: right; margin-top: 15px;">
-                Video por: Luis Enrique Castillo Dardón
-            </p>
-        </div>
-        
     </main>
 
     <footer>
         <span>@qcastilloo_</span>
-        <img src="https://www.capouilliez.edu.gt/assets/img/logo.png" height="50">
+        <img src="https://www.capouilliez.edu.gt/assets/img/logo.png" height="50" alt="Logo Capouilliez">
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards    = Array.from(document.querySelectorAll('.semana'));
+            const search   = document.getElementById('buscador');
+            const chips    = Array.from(document.querySelectorAll('.chip'));
+            const counter  = document.getElementById('contador');
+            const empty    = document.getElementById('sin-resultados');
+            const btnExp   = document.getElementById('expandir');
+            let filtro = 'todos';
+
+            // Retraso escalonado para la animación de entrada
+            cards.forEach((c, i) => c.style.setProperty('--delay', (i * 0.07) + 's'));
+            // Al terminar de aparecer, quitamos la animación para que el hover funcione limpio
+            cards.forEach(c => c.addEventListener('animationend', () => { c.style.animation = 'none'; c.style.opacity = 1; }));
+
+            // Abrir / cerrar cada tarjeta
+            cards.forEach(card => {
+                card.querySelector('.card-header').addEventListener('click', () => {
+                    const abierta = card.classList.toggle('open');
+                    card.querySelector('.card-header').setAttribute('aria-expanded', abierta);
+                    actualizarBoton();
+                });
+            });
+
+            // Dejamos la primera abierta al cargar
+            if (cards[0]) {
+                cards[0].classList.add('open');
+                cards[0].querySelector('.card-header').setAttribute('aria-expanded', 'true');
+            }
+
+            const visibles = () => cards.filter(c => c.style.display !== 'none');
+
+            function actualizarBoton() {
+                const vis = visibles();
+                const todasAbiertas = vis.length > 0 && vis.every(c => c.classList.contains('open'));
+                btnExp.textContent = todasAbiertas ? 'Contraer todo' : 'Expandir todo';
+                btnExp.dataset.state = todasAbiertas ? 'open' : 'closed';
+            }
+
+            btnExp.addEventListener('click', () => {
+                const abrir = btnExp.dataset.state !== 'open';
+                visibles().forEach(c => {
+                    c.classList.toggle('open', abrir);
+                    c.querySelector('.card-header').setAttribute('aria-expanded', abrir);
+                });
+                actualizarBoton();
+            });
+
+            // Buscador + filtros por tipo
+            function filtrar() {
+                const q = search.value.trim().toLowerCase();
+                let n = 0;
+                cards.forEach(card => {
+                    const titulo = card.querySelector('h3').textContent.toLowerCase();
+                    const desc   = (card.querySelector('.desc')?.textContent || '').toLowerCase();
+                    const tipo   = card.dataset.type;
+                    const okTexto = titulo.includes(q) || desc.includes(q);
+                    const okTipo  = filtro === 'todos' || filtro === tipo;
+                    const mostrar = okTexto && okTipo;
+                    card.style.display = mostrar ? '' : 'none';
+                    if (mostrar) n++;
+                });
+                counter.textContent = n + (n === 1 ? ' entrada' : ' entradas');
+                empty.style.display = (n === 0) ? 'flex' : 'none';
+                actualizarBoton();
+            }
+
+            search.addEventListener('input', filtrar);
+            chips.forEach(chip => chip.addEventListener('click', () => {
+                chips.forEach(c => c.classList.remove('active'));
+                chip.classList.add('active');
+                filtro = chip.dataset.filter;
+                filtrar();
+            }));
+
+            filtrar();
+        });
+    </script>
 
 </body>
 </html>
